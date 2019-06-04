@@ -2,6 +2,7 @@
 
 set -eo pipefail
 
+
 PIP_PKGS=(
     "ipdb"
     "ipython"
@@ -12,6 +13,7 @@ PIP_PKGS=(
 AUTODESK_PATH="/c/Documents and Settings/Administrator/AppData/Local/Autodesk/"
 FUSION_PYTHON="$(find "${AUTODESK_PATH}/webdeploy/shared/PYTHON" -name Python -type d)"
 PATH="${FUSION_PYTHON}":${PATH}
+
 
 CURDIR="$(pwd)"
 VENV_PATH="${CURDIR}/.venv"
@@ -24,10 +26,11 @@ echo
 
 source "${VENV_PATH}/Scripts/activate"
 pip --version
+python -c 'import ssl ; print(ssl.OPENSSL_VERSION)'
 echo
 
 for pkg in ${PIP_PKGS[*]}; do
     pip install -U "${pkg}"
 done
-echo
+echo -e "DONE\n"
 pip list
