@@ -38,7 +38,16 @@ echo
 
 echo -e "Python facility:\n==="
 "${PYTHON}" --version
+echo
+
+# Install latest Pip.
+if [[ ! -f "get-pip.py" ]]; then
+    curl -s "https://bootstrap.pypa.io/get-pip.py" -o get-pip.py
+fi
+"${PYTHON}" get-pip.py
+echo
 "${PIP}" --version
+echo
 
 PATH="${FUSION_PYTHON}":${PATH}
 "${PIP}" install -U virtualenv || :
