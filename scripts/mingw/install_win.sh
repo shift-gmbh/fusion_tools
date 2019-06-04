@@ -2,6 +2,7 @@
 
 set -eo pipefail
 
+
 ADDIN_FILES=(
     "manifest"
     "py"
@@ -12,6 +13,7 @@ CURDIR="$(pwd)"
 
 function install_addins() {
     for name in "$@"; do
+        local rollback=False
         mkdir -p "${FUSION_ADDINS}/${name}"
 
         for ext in ${ADDIN_FILES[*]}; do
@@ -27,9 +29,14 @@ function install_addins() {
             then
                 echo "DONE"
             else
+                rollback=True
                 echo "FAILED"
             fi
         done
+
+        if [[ "${rollback}" == True ]]; then
+            rm -rf "${FUSION_ADDINS}/${name}"
+        fi
     done
 }
 
