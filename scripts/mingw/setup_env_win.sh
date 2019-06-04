@@ -2,6 +2,7 @@
 
 set -eo pipefail
 
+
 PIP_PKGS=(
     "zerorpc"
 )
@@ -11,6 +12,7 @@ FUSION_PYTHON="$(find "${AUTODESK_PATH}/webdeploy/shared/PYTHON" -name Python -t
 FUSION_PYTHON_SCRIPTS="${FUSION_PYTHON}/Scripts"
 
 PYTHON="${FUSION_PYTHON}/python.exe"
+PYTHON_LOCAL="/c/Python37/python.exe"
 PIP="${FUSION_PYTHON_SCRIPTS}/pip.exe"
 
 FUSION_SITE_PACKAGES="$(find "${AUTODESK_PATH}/webdeploy/production" -name Api -type d)"
@@ -57,7 +59,7 @@ echo "Virtualenv $("${VIRTUALENV}" --version)"
 echo
 
 
-echo -e "Create a new virtual environment...\n"
+echo -e "Create a new virtual environment (Fusion hosted)...\n"
 
 echo -n "Ensure an empty \`${VENV_PATH}\`..."
 rm -rf "${VENV_PATH}" && echo "OK"
@@ -65,7 +67,7 @@ rm -rf "${VENV_PATH}" && echo "OK"
 "${VIRTUALENV}" "${VENV_PATH}"
 source "${VENV_PATH}/Scripts/activate"
 
-# Install Pip packages.
+# Install Pip packages (Fusion hosted).
 for pkg in ${PIP_PKGS[*]}; do
     pip install "${pkg}"
 done
@@ -87,4 +89,23 @@ for item in $(pip freeze | ${SED} "s/==.*//g"); do
     (cd "${FUSION_SITE_PACKAGES}" && rm -rf *.dist-info)
 done
 ls -al "${FUSION_SITE_PACKAGES}"
-echo "DONE"
+echo -e "DONE\n"
+
+
+echo -e "Create a new virtual environment (app local)...\n"
+
+echo -n "Ensure an empty \`${VENV_PATH}\`..."
+rm -rf "${VENV_PATH}" && echo "OK"
+
+"${VIRTUALENV}" -p "${PYTHON_LOCAL}" "${VENV_PATH}"
+echo
+source "${VENV_PATH}/Scripts/activate"
+pip --version
+echo
+
+# Install Pip packages (app local).
+for pkg in ${PIP_PKGS[*]}; do
+    pip install "${pkg}"
+done
+echo -e "DONE\n"
+pip list
