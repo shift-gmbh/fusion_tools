@@ -2,6 +2,7 @@
 
 set -eo pipefail
 
+
 FUSION_ADDINS="/c/Users/Administrator/AppData/Roaming/Autodesk/Autodesk Fusion 360/API/AddIns"
 CURDIR="$(pwd)"
 
